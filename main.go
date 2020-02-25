@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -13,13 +14,20 @@ func main() {
 	tamaño := len(vins)
 
 	for f := 0; f < tamaño; f++ {
-	consumo(vins[f])
+		Consumo(vins[f])
 	}
 
 	fmt.Println("Finalizando aplicación....")
+	time.Sleep(time.Second * 3)
+	fmt.Println("Busque en la carpeta files los archivos XML del consumo de la api")
+	time.Sleep(time.Second * 2)
+	fmt.Println("El programa se cerrara automaticamente")
+	time.Sleep(time.Second * 3)
+
 }
 
-func consumo(vin string) {
+
+func Consumo(vin string) {
 	/* Comienza consumo de api*/
 	response, err := http.Get("http://201.163.186.154:8080/BANJERCITO/wsvins/tests/v1/" + vin)
 	if err != nil {
@@ -27,15 +35,15 @@ func consumo(vin string) {
 	} else {
 		data, _ := ioutil.ReadAll(response.Body)
 		//fmt.Println(string(data))
-		crearXml(data, vin)
+		CrearXml(data, vin)
 	}
 	//fmt.Println("Termina consumo")
 }
 
-func crearXml(data []byte, vin string) {
+func CrearXml(data []byte, vin string) {
 	//xmlString := string(data)
-	fmt.Println("Resultado " +vin+ " : ", data)
-	filename := vin+".xml"
+	fmt.Println("Procesado " +vin)
+	filename := "Files/"+vin+".xml"
 	//file, _ := os.Create(filename)
 	//xmlWriter := io.Writer(file)
 	// Write `Hello, world!` to test.txt that can read/written by user and read by others
@@ -43,6 +51,5 @@ func crearXml(data []byte, vin string) {
 	if err != nil {
 		panic(err)
 	}
-
-
 }
+
